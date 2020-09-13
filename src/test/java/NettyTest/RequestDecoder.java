@@ -3,6 +3,7 @@ package NettyTest;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
+import main.generalLogger.LOGGER;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -15,6 +16,7 @@ public class RequestDecoder extends ReplayingDecoder<RequestData> {
     protected void decode(ChannelHandlerContext ctx,
                           ByteBuf in, List<Object> out) throws Exception {
 
+        LOGGER.general("ReqDec",System.nanoTime());
         RequestData data = new RequestData();
         data.setIntValue(in.readInt());
         int strLen = in.readInt();

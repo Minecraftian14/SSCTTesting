@@ -1,6 +1,7 @@
-import gui.Controller;
-import logic.Bullet;
-import logic.StrPack;
+import org.mcxiv.gui.Controller;
+import org.mcxiv.logic.Bullet;
+import org.mcxiv.logic.StrPack;
+import org.mcxiv.logic.tokens.BulletCoords;
 import main.generalLogger.LOGGER;
 import org.ConnectionHandle;
 import org.HostManager;
@@ -51,10 +52,10 @@ public class LauncherTest {
                 LOGGER.general("Client Side started");
             }
 
-        } else if (gameController != null && object instanceof Bullet) {
-            Bullet bb = (Bullet) object;
+        } else if (gameController != null && object instanceof BulletCoords) {
+            Bullet bb = ((BulletCoords) object).getBullet(gameController.getBody().getContent());
             bb.setY(1);
-            bb.setF(6);
+            bb.setF(-bb.getF());
             gameController.add(bb);
         }
     }
@@ -64,9 +65,9 @@ public class LauncherTest {
     }
 
     private void serverReceived(Object object, ConnectionHandle sender) {
-        LOGGER.info("server received: ", object);
+        LOGGER.info("server received:", object, sender);
 
-        if (object instanceof Bullet) manager.send(object, handle -> !handle.equals(sender));
+        if (object instanceof BulletCoords) manager.sendToAllExcept(object, sender);
     }
 
     private void serverInitialized() {
